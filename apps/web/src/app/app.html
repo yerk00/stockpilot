@@ -1,0 +1,62 @@
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark">SP</span>
+      <span>{{ title() }}</span>
+    </a>
+    <span class="badge">v0.1.0</span>
+  </header>
+
+  <main class="content">
+    <section class="hero">
+      <p class="eyebrow">Inventory intelligence</p>
+      <h1>Inventario bajo control.</h1>
+      <p class="lead">
+        Predicción de demanda, reposición sugerida y visibilidad multi-depósito para distribuidores
+        que no pueden quedarse sin stock.
+      </p>
+    </section>
+
+    <section class="health-card">
+      <div class="health-heading">
+        <h2>Estado del sistema</h2>
+        <span class="pulse" [class.error]="healthError() || health()?.status === 'degraded'"></span>
+      </div>
+
+      @if (loading()) {
+        <p class="status pending">Verificando API...</p>
+      } @else if (healthError()) {
+        <p class="status error">No se pudo conectar con la API.</p>
+      } @else if (health(); as currentHealth) {
+        <p
+          class="status"
+          [class.ok]="currentHealth.status === 'ok'"
+          [class.error]="currentHealth.status !== 'ok'"
+        >
+          API: {{ currentHealth.status }}
+        </p>
+        <ul class="checks">
+          <li>
+            <span>Base de datos</span>
+            <strong [class.ok]="currentHealth.checks.database">
+              {{ currentHealth.checks.database ? 'ok' : 'error' }}
+            </strong>
+          </li>
+          <li>
+            <span>Redis</span>
+            <strong [class.ok]="currentHealth.checks.redis">
+              {{ currentHealth.checks.redis ? 'ok' : 'error' }}
+            </strong>
+          </li>
+        </ul>
+      }
+    </section>
+
+    <router-outlet />
+  </main>
+
+  <footer class="footer">
+    <span>StockPilot · Fase 0</span>
+    <span>Laravel + Angular + MySQL + Redis</span>
+  </footer>
+</div>

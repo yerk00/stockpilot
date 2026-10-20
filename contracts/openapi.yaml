@@ -1,0 +1,57 @@
+openapi: 3.1.0
+info:
+  title: StockPilot API
+  version: 0.1.0
+  description: Multi-warehouse inventory API with demand forecasting and replenishment suggestions.
+servers:
+  - url: http://localhost:8000/api
+    description: Local development
+paths:
+  /health:
+    get:
+      summary: Report API dependency health
+      operationId: getHealth
+      responses:
+        '200':
+          description: The API and its dependencies are healthy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: At least one dependency is unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - service
+        - version
+        - checks
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded]
+        service:
+          type: string
+          example: stockpilot-api
+        version:
+          type: string
+          example: 0.1.0
+        checks:
+          type: object
+          required: [database, redis]
+          properties:
+            database:
+              type: boolean
+            redis:
+              type: boolean
+        timestamp:
+          type: string
+          format: date-time

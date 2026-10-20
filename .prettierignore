@@ -1,0 +1,11 @@
+node_modules
+vendor
+dist
+.angular
+coverage
+storage
+public/build
+.env
+.env.*
+!.env.example
+package-lock.json
